@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diario de Doble Entrada | Investigación Educativa</title>
+<style>
+:root{
+  --azul:#55b7ff;
+  --azul-oscuro:#154f8b;
+  --rojo:#e83b32;
+  --amarillo:#ffd83d;
+  --verde:#37ad57;
+  --ladrillo:#c86a33;
+  --ladrillo2:#91401f;
+  --crema:#fff9e7;
+  --blanco:#fff;
+  --texto:#263442;
+  --gris:#5f6d79;
+  --borde:#dbe6ee;
+  --sombra:0 18px 45px rgba(26,64,98,.14);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Trebuchet MS", Arial, sans-serif;
+  color:var(--texto);
+  background:linear-gradient(180deg,#e2f5ff 0%,#f8fcff 42%,#fff9ec 100%);
+}
+a{color:inherit;text-decoration:none}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 5vw;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:3px solid #d9eefc;
+}
+.marca{display:flex;gap:10px;align-items:center;font-weight:900;color:#16395a}
+.bloque{
+  width:42px;height:42px;display:grid;place-items:center;
+  background:var(--amarillo);border:4px solid #e4ad00;border-radius:9px;
+  color:#fff;font-size:25px;text-shadow:0 3px rgba(0,0,0,.18);
+}
+.topbar nav{display:flex;gap:10px;flex-wrap:wrap}
+.topbar nav a{padding:8px 11px;border-radius:999px;font-size:.88rem;font-weight:800}
+.topbar nav a:hover{background:#e9f6ff;color:var(--azul-oscuro)}
+
+.hero{
+  min-height:92vh;
+  position:relative;
+  padding:62px 20px 110px;
+  display:grid;place-items:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 16%,#fff 0 38px,transparent 39px),
+    radial-gradient(circle at 15% 17%,#fff 0 28px,transparent 29px),
+    radial-gradient(circle at 79% 12%,#fff 0 42px,transparent 43px),
+    radial-gradient(circle at 86% 13%,#fff 0 27px,transparent 28px),
+    linear-gradient(180deg,#57b9ff,#b7e7ff 78%);
+}
+.hero-card{
+  width:min(1160px,94vw);
+  display:grid;grid-template-columns:1.08fr .92fr;
+  background:#fff;border-radius:34px;overflow:hidden;
+  box-shadow:0 30px 75px rgba(24,77,118,.25);
+  border:5px solid rgba(255,255,255,.85);
+}
+.hero-left{padding:clamp(30px,5vw,66px);background:linear-gradient(180deg,#fff,#f7fbff)}
+.nivel{
+  display:inline-block;padding:8px 12px;border-radius:9px;
+  background:var(--amarillo);border:3px solid #e6ae00;
+  font-weight:900;text-transform:uppercase;font-size:.78rem;letter-spacing:.05em;
+}
+h1{
+  margin:22px 0 16px;
+  font-size:clamp(3rem,7vw,6.4rem);
+  line-height:.88;letter-spacing:-.055em;color:#173b5e;
+}
+h1 span{display:block;color:var(--rojo)}
+.lead{font-size:1.08rem;line-height:1.75;color:#4e6171;max-width:720px}
+.nombre{
+  margin-top:24px;display:inline-flex;gap:8px;flex-wrap:wrap;
+  background:#eef8ff;border:2px solid #cceaff;border-radius:15px;
+  padding:12px 15px;font-weight:900;color:#173b5e;
+}
+.hero-right{
+  padding:clamp(26px,4vw,50px);
+  display:flex;flex-direction:column;justify-content:center;gap:14px;
+  background:
+    linear-gradient(135deg,rgba(255,216,61,.24),rgba(255,255,255,.88) 45%),
+    repeating-linear-gradient(0deg,#fff2db 0 44px,#efc18a 44px 48px);
+  border-left:5px solid #e3b172;
+}
+.logo{
+  width:min(250px,80%);align-self:center;background:white;
+  padding:14px;border-radius:18px;box-shadow:var(--sombra)
+}
+.dato{
+  background:rgba(255,255,255,.95);padding:11px 13px;border-radius:13px;
+  box-shadow:0 8px 20px rgba(73,48,20,.08);border:2px solid rgba(0,0,0,.05)
+}
+.dato b{display:block;color:#1975bd;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.suelo{
+  position:absolute;left:0;right:0;bottom:0;height:80px;
+  background:
+    linear-gradient(#5dbc47 0 14px,#3d9732 14px 20px,transparent 20px),
+    repeating-linear-gradient(90deg,var(--ladrillo) 0 48px,var(--ladrillo2) 48px 52px);
+  border-top:5px solid #2d7f28;
+}
+.tubo{
+  position:absolute;right:5vw;bottom:72px;width:96px;height:118px;
+  background:linear-gradient(90deg,#1e9b4b 0 20%,#48d779 20% 74%,#188741 74%);
+  border:5px solid #16793d;border-radius:8px 8px 0 0;
+}
+.tubo:before{
+  content:"";position:absolute;left:-12px;top:-22px;width:112px;height:35px;
+  border:5px solid #16793d;border-radius:8px;
+  background:linear-gradient(90deg,#1e9b4b 0 20%,#48d779 20% 74%,#188741 74%);
+}
+.wrap{width:min(1160px,94vw);margin:auto}
+section.contenido{padding:86px 20px}
+.kicker{
+  display:inline-block;padding:8px 12px;border-radius:999px;background:#e6f5ff;
+  color:#1672b9;font-weight:900;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em
+}
+h2{
+  margin:14px 0 12px;font-size:clamp(2.2rem,4.5vw,4rem);
+  line-height:1;color:#173b5e;letter-spacing:-.035em
+}
+.intro{max-width:900px;color:var(--gris);font-size:1.08rem;line-height:1.75}
+
+.instrucciones{
+  margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:18px;
+}
+.instruccion{
+  background:white;border:2px solid #e5edf3;border-radius:22px;padding:22px;
+  box-shadow:var(--sombra)
+}
+.instruccion .num{
+  width:44px;height:44px;display:grid;place-items:center;
+  border-radius:11px;background:var(--amarillo);border:3px solid #e5ae00;
+  font-weight:1000;margin-bottom:12px
+}
+.instruccion h3{margin:0 0 7px;color:#173b5e}
+.instruccion p{margin:0;color:#5c6a75;line-height:1.65}
+
+.diario{padding:20px 20px 90px}
+.tabla-diario{
+  display:grid;gap:22px;
+}
+.encabezado{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  position:sticky;top:70px;z-index:10;
+}
+.cab{
+  padding:18px 20px;border-radius:18px;font-weight:1000;color:white;
+  box-shadow:var(--sombra);font-size:1.08rem
+}
+.cab.izq{background:linear-gradient(135deg,#1976d2,#57b8ff)}
+.cab.der{background:linear-gradient(135deg,#d6322c,#ff7167)}
+.fila{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  align-items:stretch;
+}
+.col{
+  position:relative;background:white;border-radius:24px;padding:25px;
+  box-shadow:var(--sombra);border:2px solid #e8eef3;min-height:240px;
+}
+.col.izq{border-top:7px solid #43a8ed}
+.col.der{border-top:7px solid #ef5e54;background:linear-gradient(180deg,#fff,#fffaf4)}
+.mundo{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:13px;
+  padding:6px 10px;border-radius:9px;background:var(--amarillo);
+  border:2px solid #e6ad00;font-weight:900;font-size:.82rem;color:#5a4200;
+}
+.col h3{margin:0 0 12px;color:#173b5e;font-size:1.4rem}
+.col p{margin:0;color:#566675;line-height:1.72}
+.col ul{margin:8px 0 0;padding-left:20px;color:#566675;line-height:1.68}
+.reflexion strong{color:#a9322c}
+.conexion{
+  margin-top:15px;padding:13px 14px;border-radius:14px;
+  background:#fff3c9;border:1px solid #f0d878;color:#674d00!important;
+}
+.moneda{
+  position:absolute;right:18px;top:17px;width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;background:var(--amarillo);border:3px solid #e4aa00;
+  font-weight:1000;color:#805900
+}
+.pregunta{
+  margin-top:15px;padding:13px 14px;border-radius:14px;
+  background:#edf8ff;border-left:5px solid #55afea;color:#35576e!important
+}
+
+.sintesis{
+  background:linear-gradient(180deg,#fff8dc,#fff);
+  border-top:1px solid #f2dfa1;border-bottom:1px solid #f2dfa1;
+}
+.tarjetas{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px
+}
+.tarjeta{
+  background:white;border-radius:22px;padding:24px;border:2px solid #ecedf0;box-shadow:var(--sombra)
+}
+.tarjeta .icono{font-size:38px;margin-bottom:10px}
+.tarjeta h3{margin:0 0 8px;color:#173b5e}
+.tarjeta p{margin:0;color:#5e6b77;line-height:1.65}
+
+.cierre{
+  text-align:center;background:#fff;padding:86px 20px
+}
+.cierre-box{
+  width:min(1000px,94vw);margin:auto;padding:42px;border-radius:28px;
+  background:linear-gradient(135deg,#fff3bd,#fff 48%,#e7f6ff);
+  border:2px solid #efe0aa;box-shadow:var(--sombra)
+}
+.cierre p{max-width:800px;margin:14px auto 0;color:#5d6a76;line-height:1.8;font-size:1.08rem}
+
+footer{background:#15314b;color:#dcebf7;padding:34px 20px}
+.footer-inner{width:min(1160px,94vw);margin:auto;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer p{margin:4px 0}
+footer strong{color:white}
+
+@media(max-width:900px){
+  .hero-card,.instrucciones,.fila,.encabezado,.tarjetas{grid-template-columns:1fr}
+  .hero-right{border-left:0;border-top:5px solid #e3b172}
+  .encabezado{position:static}
+  .cab.der{display:none}
+  .fila{gap:10px}
+}
+@media(max-width:650px){
+  .topbar nav{display:none}
+  h1{font-size:3.6rem}
+  .tubo{opacity:.5}
+}
+@media print{
+  .topbar{display:none}
+  body{background:white}
+  .hero{min-height:auto}
+  .encabezado{position:static}
+  .fila,.col{break-inside:avoid}
+  .col,.instruccion,.tarjeta,.cierre-box{box-shadow:none}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="marca"><span class="bloque">?</span> Diario de Doble Entrada</div>
+  <nav>
+    <a href="#portada">Portada</a>
+    <a href="#consigna">Consigna</a>
+    <a href="#diario">Diario</a>
+    <a href="#sintesis">Síntesis</a>
+  </nav>
+</header>
+
+<section class="hero" id="portada">
+  <div class="hero-card">
+    <div class="hero-left">
+      <span class="nivel">Mundo académico · II cuatrimestre 2026</span>
+      <h1>Diario de <span>Doble Entrada</span></h1>
+      <p class="lead">
+        Una lectura personal de la presentación sobre investigación educativa: en una columna recupero
+        las ideas que considero más importantes y, en la otra, dejo mi reflexión, mis dudas y las conexiones
+        que esas ideas me generan desde la práctica educativa.
+      </p>
+      <div class="nombre">🎓 Daniel Tijerino Cerón</div>
+    </div>
+
+    <aside class="hero-right">
+      <img class="logo"
+        src="https://www.elempleo.com/cr/sitio-empresarial/CompanySites/universidad-castro-carazo/resources/images/logo-social.png"
+        alt="Logo Universidad Castro Carazo">
+
+      <div class="dato"><b>Universidad</b>Universidad Castro Carazo</div>
+      <div class="dato"><b>Curso</b>2026C2-G07 – Investigación Educativa</div>
+      <div class="dato"><b>Docente</b>MSc. Aleydi Camacho Álvarez</div>
+      <div class="dato"><b>Periodo</b>II cuatrimestre</div>
+      <div class="dato"><b>Sede</b>Sede Central, San José</div>
+      <div class="dato"><b>Fecha</b>08 de agosto de 2026</div>
+    </aside>
+  </div>
+  <div class="tubo"></div>
+  <div class="suelo"></div>
+</section>
+
+<section class="contenido" id="consigna">
+  <div class="wrap">
+    <span class="kicker">🍄 Cómo se construye</span>
+    <h2>La lógica del diario de doble entrada</h2>
+    <p class="intro">
+      Este trabajo no busca repetir la presentación palabra por palabra. La idea es separar con claridad
+      lo que recibimos de la exposición y lo que esa información provoca en nuestro pensamiento.
+      Esa diferencia es justamente lo que hace valioso un diario de doble entrada.
+    </p>
+
+    <div class="instrucciones">
+      <article class="instruccion">
+        <div class="num">1</div>
+        <h3>Primera columna: información recibida u observada</h3>
+        <p>
+          Aquí anoto hechos, ideas, preguntas o información importante que apareció en la presentación.
+          Procuro resumir lo esencial sin cambiar el sentido de lo expuesto.
+        </p>
+      </article>
+
+      <article class="instruccion">
+        <div class="num">2</div>
+        <h3>Segunda columna: mi reflexión</h3>
+        <p>
+          Aquí escribo lo que pienso a partir de esa información: opiniones, dudas, conexiones con la
+          educación, experiencias que me recuerda o preguntas que me deja abiertas.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="diario" id="diario">
+  <div class="wrap">
+    <div class="encabezado">
+      <div class="cab izq">📘 Información importante de la presentación</div>
+      <div class="cab der">💭 Mi reflexión, opinión, duda o conexión</div>
+    </div>
+
+    <div class="tabla-diario">
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 1-1</span>
+          <h3>La investigación como proceso sistemático</h3>
+          <p>
+            La presentación define la investigación como un proceso sistemático que busca responder
+            preguntas y resolver problemas mediante la recolección y el análisis de datos. También señala
+            que puede clasificarse, entre otros tipos, en exploratoria, descriptiva y explicativa.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Lo que me deja esta idea</h3>
+          <p>
+            <strong>Mi reflexión:</strong> me hace pensar que investigar no es simplemente buscar información
+            en Internet o reunir muchas páginas. Hay una intención, una pregunta y un orden detrás del proceso.
+            En educación esto es clave, porque muchas veces vemos una situación en el aula y creemos saber la
+            causa, pero una investigación bien planteada obliga a comprobar antes de concluir.
+          </p>
+          <p class="conexion">
+            Conexión: en el trabajo docente, observar un problema y registrar evidencia puede ayudarnos a
+            tomar decisiones menos impulsivas y más fundamentadas.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 1-2</span>
+          <h3>Investigación exploratoria: un primer acercamiento</h3>
+          <p>
+            La investigación exploratoria sirve como base para futuras investigaciones. Es especialmente útil
+            cuando existe poca información sobre un tema y se necesita reconocer variables, relaciones o posibles
+            caminos para estudiar un problema.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Explorar antes de afirmar</h3>
+          <p>
+            <strong>Mi opinión:</strong> considero que este tipo de investigación se parece mucho a lo que uno
+            debería hacer cuando entra por primera vez a un grupo o enfrenta una situación que no conoce bien.
+            Antes de señalar causas, conviene escuchar, observar y entender el contexto.
+          </p>
+          <p class="pregunta">
+            Duda que me surge: ¿hasta qué punto una investigación exploratoria puede terminar modificando la
+            pregunta inicial al descubrir aspectos que no se habían considerado?
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 1-3</span>
+          <h3>Técnicas usadas en la investigación exploratoria</h3>
+          <p>
+            Entre las técnicas mencionadas se encuentran las entrevistas, los grupos focales y la revisión de
+            literatura. Estas estrategias permiten obtener perspectivas diversas sobre el fenómeno que se estudia.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>No todo se descubre con una encuesta</h3>
+          <p>
+            <strong>Mi reflexión:</strong> esta parte me recuerda que un mismo problema puede verse distinto según
+            quién lo cuente. Una entrevista puede revelar detalles que un dato numérico no muestra, mientras que
+            revisar literatura ayuda a no comenzar desde cero.
+          </p>
+          <p class="conexion">
+            En un centro educativo, conversar con estudiantes, docentes y familias podría dar versiones diferentes
+            de una misma situación; justamente ahí aparece información valiosa.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 2-1</span>
+          <h3>Investigación descriptiva</h3>
+          <p>
+            La investigación descriptiva busca caracterizar de manera precisa un fenómeno. Se enfoca en sus rasgos
+            relevantes y utiliza procedimientos sistemáticos para recopilar y organizar datos que permitan una
+            descripción clara y detallada.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Describir también es comprender</h3>
+          <p>
+            <strong>Mi reflexión:</strong> a veces se piensa que describir es una tarea sencilla, pero hacerlo bien
+            exige definir qué se observará, cómo se registrará y con qué criterios. Una mala descripción puede
+            llevar a interpretar de forma equivocada lo que ocurre.
+          </p>
+          <p class="conexion">
+            Ejemplo que relaciono con educación: describir los hábitos de estudio de un grupo puede ser un paso
+            previo antes de diseñar una estrategia para mejorar el rendimiento.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 2-2</span>
+          <h3>Investigación explicativa: causas y efectos</h3>
+          <p>
+            La investigación explicativa busca identificar y analizar las causas subyacentes de un fenómeno.
+            No se limita a observar qué sucede, sino que procura comprender por qué sucede y qué relaciones pueden
+            existir entre distintos factores.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>El “por qué” requiere más cuidado</h3>
+          <p>
+            <strong>Mi opinión:</strong> esta es probablemente la parte más delicada, porque explicar una causa
+            implica contar con suficiente evidencia. En educación sería muy fácil decir que un estudiante “no se
+            esfuerza”, pero una investigación explicativa debería examinar otros factores antes de hacer una afirmación.
+          </p>
+          <p class="pregunta">
+            Me queda la inquietud de cómo diferenciar una relación entre dos variables de una verdadera relación causal.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 2-3</span>
+          <h3>Métodos cuantitativos y cualitativos</h3>
+          <p>
+            La presentación indica que la investigación explicativa puede apoyarse en métodos cuantitativos y
+            cualitativos para validar hipótesis, identificar patrones y construir explicaciones más completas
+            sobre los fenómenos estudiados.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Los números y las voces pueden complementarse</h3>
+          <p>
+            <strong>Mi reflexión:</strong> no veo estos métodos como enemigos. Los datos cuantitativos pueden mostrar
+            una tendencia, mientras que la información cualitativa puede ayudar a entender qué hay detrás de esa tendencia.
+            La combinación puede dar una visión más humana y, al mismo tiempo, más sustentada.
+          </p>
+          <p class="conexion">
+            Por ejemplo, no es lo mismo saber que bajó la asistencia que escuchar directamente las razones por las cuales
+            algunos estudiantes están faltando.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 3-1</span>
+          <h3>Contribución a la literatura científica</h3>
+          <p>
+            Los resultados de la investigación explicativa no solo aportan conocimiento sobre un fenómeno específico,
+            sino que también pueden contribuir a la literatura existente y servir de base para futuras investigaciones.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Una investigación puede abrir otras puertas</h3>
+          <p>
+            <strong>Mi reflexión:</strong> me gusta esta idea porque muestra que una investigación no necesariamente
+            termina con la conclusión. Un estudio puede responder una pregunta y, al mismo tiempo, generar otras nuevas.
+            Eso hace que el conocimiento avance de forma acumulativa.
+          </p>
+          <p class="conexion">
+            También me recuerda la importancia de documentar bien los procedimientos, porque otra persona podría retomar
+            el trabajo y profundizarlo más adelante.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo 3-2</span>
+          <h3>Exploratoria y descriptiva: flexibilidad frente a estructura</h3>
+          <p>
+            La presentación compara la investigación exploratoria, caracterizada por su flexibilidad y búsqueda de una
+            comprensión inicial, con la investigación descriptiva, que trabaja de forma más estructurada y se orienta a
+            detallar las características de un fenómeno.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>El tipo depende de la pregunta</h3>
+          <p>
+            <strong>Mi conclusión personal:</strong> no tendría sentido escoger primero un tipo de investigación y después
+            tratar de adaptar el problema a la fuerza. Más bien, la pregunta y el nivel de conocimiento que ya tenemos son
+            los que deberían orientar la elección.
+          </p>
+          <p class="pregunta">
+            Una pregunta que me queda es si una misma investigación puede comenzar como exploratoria y luego avanzar hacia
+            una etapa descriptiva o explicativa.
+          </p>
+        </article>
+      </div>
+
+      <div class="fila">
+        <article class="col izq">
+          <span class="moneda">★</span>
+          <span class="mundo">Mundo Final</span>
+          <h3>Hoja de ruta para elegir el tipo de investigación</h3>
+          <p>
+            La presentación propone una secuencia: definir el tema, realizar una exploración inicial, describir el fenómeno,
+            analizar posibles causas mediante una investigación explicativa y finalmente evaluar los resultados para ajustar
+            la metodología si es necesario.
+          </p>
+        </article>
+
+        <article class="col der reflexion">
+          <span class="moneda">★</span>
+          <h3>Investigar también implica revisar el camino</h3>
+          <p>
+            <strong>Mi reflexión:</strong> esta ruta me parece útil porque muestra la investigación como un proceso que se puede
+            revisar. No todo tiene que salir perfecto desde el primer intento. Si los resultados no responden a la pregunta,
+            corresponde revisar decisiones metodológicas y aprender de lo ocurrido.
+          </p>
+          <p class="conexion">
+            En la práctica educativa esto tiene mucho sentido: una estrategia puede evaluarse, ajustarse y volver a aplicarse
+            según la evidencia que vayamos obteniendo.
+          </p>
+        </article>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="contenido sintesis" id="sintesis">
+  <div class="wrap">
+    <span class="kicker">🏆 Síntesis del recorrido</span>
+    <h2>Tres preguntas para no perderse</h2>
+    <p class="intro">
+      Al final, la diferencia entre los tres tipos puede recordarse de una manera muy sencilla.
+    </p>
+
+    <div class="tarjetas">
+      <article class="tarjeta">
+        <div class="icono">🔎</div>
+        <h3>Exploratoria</h3>
+        <p><b>Pregunta guía:</b> ¿qué sabemos y qué necesitamos descubrir primero?</p>
+      </article>
+      <article class="tarjeta">
+        <div class="icono">📊</div>
+        <h3>Descriptiva</h3>
+        <p><b>Pregunta guía:</b> ¿cómo se presenta el fenómeno y cuáles son sus características?</p>
+      </article>
+      <article class="tarjeta">
+        <div class="icono">⚙️</div>
+        <h3>Explicativa</h3>
+        <p><b>Pregunta guía:</b> ¿por qué ocurre y qué relaciones pueden estar influyendo?</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="cierre-box">
+    <span class="kicker">⭐ Reflexión final</span>
+    <h2>Investigar es aprender a mirar con más cuidado</h2>
+    <p>
+      Después de revisar la presentación, considero que la investigación educativa tiene valor porque obliga a pasar
+      de la impresión rápida a una comprensión más fundamentada. Explorar, describir y explicar no son pasos aislados:
+      pueden convertirse en una forma ordenada de comprender mejor lo que sucede en los espacios educativos y de tomar
+      decisiones más responsables con base en evidencia.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <strong>Universidad Castro Carazo</strong>
+      <p>2026C2-G07 – Investigación Educativa</p>
+      <p>Docente: MSc. Aleydi Camacho Álvarez</p>
+    </div>
+    <div>
+      <strong>Daniel Tijerino Cerón</strong>
+      <p>II cuatrimestre · Sede Central, San José</p>
+      <p>08 de agosto de 2026</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
